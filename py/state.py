@@ -1,12 +1,12 @@
-from logger import Logger, StateLogger
+from logger import Logger, LoggerGroup, StateLogger
 from random import seed, shuffle
 
 
 class MazeState:
-    def __init__(_, _loggers: list[Logger], _height, _width) -> None:
+    def __init__(_, _height, _width, _logger: LoggerGroup) -> None:
         _.height = _height
         _.width = _width
-        _.loggers = _loggers
+        _.logger = _logger
         _.cells = [
             [0 if i % 2 and j % 2 else 1 for j in range(1 + 2 * _.width)]
             for i in range(1 + 2 * _.height)
@@ -16,8 +16,7 @@ class MazeState:
         return _.cells[loc[0]][loc[1]]
 
     def __setitem__(_, loc: tuple[int, int], val: int) -> None:
-        for log in _.loggers:
-            log.setCell(_, loc, _[loc], val)
+        _.logger.setCell(_, loc, _[loc], val)
         _.cells[loc[0]][loc[1]] = val
 
     def __repr__(_) -> str:
