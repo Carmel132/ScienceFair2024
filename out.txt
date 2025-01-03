@@ -1,3 +1,4 @@
+DIM: (5, 5)
 loc=(1, 2), old=1, new=0, TYPE=ActionTypes.SETCELL
 loc=(2, 3), old=1, new=0, TYPE=ActionTypes.SETCELL
 loc=(3, 2), old=1, new=0, TYPE=ActionTypes.SETCELL
