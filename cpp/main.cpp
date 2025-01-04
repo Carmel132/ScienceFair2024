@@ -1,5 +1,5 @@
 #include "SDL.h"
-#include "include/test.h"
+#include "test.h"
 #include <iostream>
 SDL_Window *Window;
 SDL_Renderer *Renderer;

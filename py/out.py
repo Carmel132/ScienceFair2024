@@ -11,6 +11,6 @@ from logger import LoggerGroup, StateLogger
 from state import MazeState, MazeGeneratorFactory
 
 s = LoggerGroup(StateLogger())
-m = MazeState(5, 5, s)
-MazeGeneratorFactory(m, 1).generate()
-out((5, 5), s.log)
+m = MazeState(5, 6, s)
+MazeGeneratorFactory(m, 4).generate()
+out((5, 6), s.log)

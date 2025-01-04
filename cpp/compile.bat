@@ -26,5 +26,6 @@ popd
 
 REM End delayed expansion
 endlocal
-pause
+cls
+main.exe
 exit

@@ -3,7 +3,7 @@ from random import seed, shuffle
 
 
 class MazeState:
-    def __init__(_, _height, _width, _logger: LoggerGroup) -> None:
+    def __init__(_, _width, _height, _logger: LoggerGroup) -> None:
         _.height = _height
         _.width = _width
         _.logger = _logger
@@ -13,11 +13,11 @@ class MazeState:
         ]
 
     def __getitem__(_, loc: tuple[int, int]) -> int:
-        return _.cells[loc[0]][loc[1]]
+        return _.cells[loc[1]][loc[0]]
 
     def __setitem__(_, loc: tuple[int, int], val: int) -> None:
         _.logger.setCell(_, loc, _[loc], val)
-        _.cells[loc[0]][loc[1]] = val
+        _.cells[loc[1]][loc[0]] = val
 
     def __repr__(_) -> str:
         return "\n".join(map(lambda row: " ".join(map(str, row)), _.cells))
@@ -34,7 +34,7 @@ class MazeGeneratorFactory:
 
     @staticmethod
     def isValidMove(
-        next: tuple[int, int], _height: int, _width: int, _visited: list[list[int]]
+        next: tuple[int, int], _width: int, _height: int, _visited: list[list[int]]
     ):
         return (
             next[0] >= 0
@@ -57,7 +57,7 @@ class MazeGeneratorFactory:
             shuffle(_.directions)
             for direction in _.directions:
                 n = (currentCell[0] + direction[0], currentCell[1] + direction[1])
-                if MazeGeneratorFactory.isValidMove(n, _.m.height, _.m.width, visited):
+                if MazeGeneratorFactory.isValidMove(n, _.m.width, _.m.height, visited):
                     _.m[
                         (
                             2 * currentCell[0] + 1 + direction[0],
