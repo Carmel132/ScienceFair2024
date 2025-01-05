@@ -5,14 +5,13 @@
 #include <runner.h>
 int main(int argc, char *argv[])
 {
-    try {
-        std::shared_ptr<MazeState> m;
-        Runner r = Runner(&m);
-        std::cout << m->toString();
+    std::shared_ptr<MazeState> m;
+    Runner r = Runner(&m);
+    r.next();
+    r.next();
+    r.next();
 
-    }
-    catch (std::exception e) {
-        std::cout << e.what();
-    }
+    std::cout << m->toString();
+
     return 0;
 }

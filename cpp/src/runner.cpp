@@ -1,42 +1,47 @@
 #include "runner.h"
-
-Runner::Runner(std::shared_ptr<MazeState>* out) {
-    std::ifstream file("../../out.txt");
-    if (!file.is_open()) {
-        std::cerr << "Could not open file!\n";
-        throw std::runtime_error("Could not open file: ");
-    }
-    std::ostringstream oss;
-    oss << file.rdbuf();
-    Runner(oss.str(), out);
+Runner::Runner(std::shared_ptr<MazeState>* out) 
+    : Runner([&]() -> std::string {
+        std::ifstream file("../../out.txt");
+        if (!file.is_open()) {
+            std::cerr << "Could not open file!\n";
+            throw std::runtime_error("Could not open file: ");
+        }
+        std::ostringstream oss;
+        oss << file.rdbuf();
+        return oss.str();
+      }(), out) {
 }
 
 void Runner::back() {
-    if (idx <= actions.size()) {
+    if (idx <= 0) {
         std::cerr << "Cannot move backward!\n";
         return;
     }
     idx--;
-    actions[idx]->reverse(maze);
+    actions.at(idx)->reverse(maze);
 }
 
 void Runner::next() {
+    std::cout << "in next: " << actions.size() << '\n';
     if (idx >= actions.size()) {
         std::cerr << "Cannot move forward!\n";
         return;
     }
     idx++;
-    actions[idx]->run(maze);
+    actions.at(idx)->run(maze);
 }
 
 void Runner::parseLines(std::vector<std::string> lines) {
-    for (int i = metadataLines + 1; i < lines.size(); ++i) {
+    actions = std::vector<std::unique_ptr<ActionPattern>>();
+    for (int i = metadataLines; i < lines.size(); ++i) {
         std::smatch matches;
         if (std::regex_search(lines[i], matches, parseLineRegex)) {
-
-            if (matches[1].compare("SETCELL")) {
-                actions.push_back(new SetCell(lines[i]));
+            if (matches[1].compare("SETCELL")==0) {
+                actions.push_back(std::make_unique<SetCell>(lines[i]));
             }
+        }
+        else {
+            std::cerr << "Could not identify action: " << lines[i];
         }
 
     }
@@ -57,9 +62,9 @@ Runner::Runner(std::string log, std::shared_ptr<MazeState>* out) {
         try {
             maze =std::make_shared<MazeState>(std::stoi(matches[1].str()), std::stoi(matches[2].str()));
         }
-        catch (std::exception e) {
+        catch (const std::exception& e) {
             maze = std::make_shared<MazeState>(5, 5);
-            std::cerr << "Error: " << e.what();
+            std::cerr << "Error: " << e.what() << "\n";
         }
 
     }

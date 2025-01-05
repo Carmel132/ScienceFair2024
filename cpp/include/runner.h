@@ -8,11 +8,10 @@
 #include <memory>
 class ActionPattern {
 public:
-    const std::regex pattern;
-
-
     virtual void run(std::shared_ptr<MazeState> maze) =0;
     virtual void reverse(std::shared_ptr<MazeState> maze)=0;
+    virtual ~ActionPattern() = default;
+
 };
 
 class SetCell : public ActionPattern {
@@ -40,7 +39,7 @@ private:
     const std::regex metaMazeSize{R"(DIM: \(([0-9]+), ([0-9]+))"};
 
     std::shared_ptr<MazeState> maze;
-    std::vector<ActionPattern*> actions;
+    std::vector<std::unique_ptr<ActionPattern>> actions;
     int idx;
     const int metadataLines = 1;
 };
