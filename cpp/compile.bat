@@ -28,5 +28,5 @@ popd
 REM End delayed expansion
 endlocal
 
-main.exe > output.txt
+main.exe > output.txt 2> error.txt
 exit

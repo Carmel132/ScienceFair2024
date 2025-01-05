@@ -19,6 +19,8 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>for %f in (..\src\*.cpp) do (set cp
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\game.cpp" ) 
 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\runner.cpp" ) 
+
 C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\state.cpp" ) 
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>for %f in (!cppFiles!) do echo %f 
@@ -29,14 +31,20 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>echo ..\main.cpp
 C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\game.cpp" 
 "..\src\game.cpp"
 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\runner.cpp" 
+"..\src\runner.cpp"
+
 C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\state.cpp" 
 "..\src\state.cpp"
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Compile the collected files 
 
-C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\runner.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
 main.cpp
 game.cpp
+runner.cpp
+..\src\runner.cpp(5): warning C4129: '(': unrecognized character escape sequence
+..\src\runner.cpp(5): warning C4129: ')': unrecognized character escape sequence
 state.cpp
 Generating Code...
 Microsoft (R) Incremental Linker Version 14.38.33135.0
@@ -52,6 +60,7 @@ shell32.lib
 /SUBSYSTEM:CONSOLE 
 main.obj 
 game.obj 
+runner.obj 
 state.obj 
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Return to the original directory 
@@ -62,6 +71,6 @@ C:\Users\Carmel\vclib\Science Fair\cpp>REM End delayed expansion
 
 C:\Users\Carmel\vclib\Science Fair\cpp>endlocal
 
-C:\Users\Carmel\vclib\Science Fair\cpp\build>main.exe  1>output.txt 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>main.exe  1>output.txt 2>error.txt 
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>exit
