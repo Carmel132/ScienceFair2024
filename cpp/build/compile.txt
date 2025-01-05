@@ -43,8 +43,6 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src
 main.cpp
 game.cpp
 runner.cpp
-..\src\runner.cpp(5): warning C4129: '(': unrecognized character escape sequence
-..\src\runner.cpp(5): warning C4129: ')': unrecognized character escape sequence
 state.cpp
 Generating Code...
 Microsoft (R) Incremental Linker Version 14.38.33135.0

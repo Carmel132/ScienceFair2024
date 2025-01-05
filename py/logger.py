@@ -15,7 +15,7 @@ class MazeAction:
     TYPE: ActionTypes
 
     def __repr__(self) -> str:
-        return ", ".join(f"{key}={item}" for (key, item) in self.__dict__.items())
+        return ", ".join(f"{key}={repr(item)}" for (key, item) in self.__dict__.items())
 
 
 def MazeActionClass(cls):
