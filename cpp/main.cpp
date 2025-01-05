@@ -1,17 +1,12 @@
 #include <iostream>
 #include "state.h"
-//#include "game.h"
+#include "game.h"
 //#undef SDL_main
 #include <runner.h>
+#include "render.h"
 int main(int argc, char *argv[])
 {
-    std::shared_ptr<MazeState> m;
-    Runner r = Runner(&m);
-    r.next();
-    r.next();
-    r.next();
-
-    std::cout << m->toString();
-
+    auto g = new Game();
+    g->run();
     return 0;
 }

@@ -8,22 +8,28 @@ void Game::run() {
         return;
     }
     
-    bool running = true;
+    bool quit = false;
     SDL_Event e;
-    
-    while(running)
+    Renderable* obj = new OutlineColoredRect(50,50, 50,50, Color{0xFF,0,0});
+    while(!quit)
     {
+        // Event
         while(SDL_PollEvent(&e) != 0)
         {
             if(e.type == SDL_QUIT)
             {
-                running = false;
+                quit = true;
             }
         }
-        
-        SDL_SetRenderDrawColor(renderer, 0xff, 0, 0, 0xff);
+
+        // Render
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
         SDL_RenderClear(renderer);
         
+                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xff);
+
+        obj->render(renderer);
+
         SDL_RenderPresent(renderer);
     }
 
@@ -34,6 +40,8 @@ void Game::run() {
 	renderer = NULL;
     window =  NULL;
     
+    delete obj;
+
     SDL_Quit();
 }
 

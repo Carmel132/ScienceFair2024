@@ -19,6 +19,8 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>for %f in (..\src\*.cpp) do (set cp
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\game.cpp" ) 
 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\render.cpp" ) 
+
 C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\runner.cpp" ) 
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\state.cpp" ) 
@@ -31,6 +33,9 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>echo ..\main.cpp
 C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\game.cpp" 
 "..\src\game.cpp"
 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\render.cpp" 
+"..\src\render.cpp"
+
 C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\runner.cpp" 
 "..\src\runner.cpp"
 
@@ -39,9 +44,10 @@ C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\state.cpp"
 
 C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Compile the collected files 
 
-C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\runner.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
+C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\render.cpp" "..\src\runner.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
 main.cpp
 game.cpp
+render.cpp
 runner.cpp
 state.cpp
 Generating Code...
@@ -58,6 +64,7 @@ shell32.lib
 /SUBSYSTEM:CONSOLE 
 main.obj 
 game.obj 
+render.obj 
 runner.obj 
 state.obj 
 

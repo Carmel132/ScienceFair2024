@@ -1,4 +1,17 @@
 #include "runner.h"
+
+void Runner::end() {
+    while (idx < actions.size()-1) {
+        next();
+    }
+}
+
+void Runner::start() {
+    while (idx > 0) {
+        back();
+    }
+}
+
 Runner::Runner(std::shared_ptr<MazeState>* out) 
     : Runner([&]() -> std::string {
         std::ifstream file("../../out.txt");
@@ -23,7 +36,7 @@ void Runner::back() {
 
 void Runner::next() {
     std::cout << "in next: " << actions.size() << '\n';
-    if (idx >= actions.size()) {
+    if (idx >= actions.size()-1) {
         std::cerr << "Cannot move forward!\n";
         return;
     }

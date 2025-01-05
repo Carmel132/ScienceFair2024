@@ -32,6 +32,9 @@ public:
     void next();
     void back();
 
+    void end();
+    void start();
+
 private:
     void parseLines(std::vector<std::string> lines);
     const std::regex parseLineRegex{R"(TYPE=(\w+))"};
