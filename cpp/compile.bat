@@ -1,3 +1,4 @@
+
 REM Create build directory and navigate to it
 mkdir build
 pushd build
@@ -15,7 +16,7 @@ for %%f in (..\src\*.cpp) do (
 for %%f in (!cppFiles!) do echo %%f
 
 REM Compile the collected files
-cl /Zi %cppFiles% ^/I "..\include" ^
+cl /EHs /W3 /Zi %cppFiles% ^/I "..\include" ^
 /I "..\src" ^
 /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" ^
 /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" ^
@@ -26,6 +27,6 @@ popd
 
 REM End delayed expansion
 endlocal
-cls
-main.exe
+
+main.exe > output.txt
 exit

@@ -1,0 +1,67 @@
+
+C:\Users\Carmel\vclib\Science Fair\cpp>REM Create build directory and navigate to it 
+
+C:\Users\Carmel\vclib\Science Fair\cpp>mkdir build 
+
+C:\Users\Carmel\vclib\Science Fair\cpp>pushd build 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Enable delayed variable expansion 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>setlocal enabledelayedexpansion 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Create a variable to store all .cpp files 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>set cppFiles=..\main.cpp 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Add all .cpp files from src to the list 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>for %f in (..\src\*.cpp) do (set cppFiles=!cppFiles! "%f" ) 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\game.cpp" ) 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>(set cppFiles=!cppFiles! "..\src\state.cpp" ) 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>for %f in (!cppFiles!) do echo %f 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>echo ..\main.cpp 
+..\main.cpp
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\game.cpp" 
+"..\src\game.cpp"
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>echo "..\src\state.cpp" 
+"..\src\state.cpp"
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Compile the collected files 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
+main.cpp
+game.cpp
+state.cpp
+Generating Code...
+Microsoft (R) Incremental Linker Version 14.38.33135.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:main.exe 
+/debug 
+/LIBPATH:C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64 
+user32.lib 
+SDL2main.lib 
+SDL2.lib 
+shell32.lib 
+/SUBSYSTEM:CONSOLE 
+main.obj 
+game.obj 
+state.obj 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>REM Return to the original directory 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>popd
+
+C:\Users\Carmel\vclib\Science Fair\cpp>REM End delayed expansion 
+
+C:\Users\Carmel\vclib\Science Fair\cpp>endlocal
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>main.exe  1>output.txt 
+
+C:\Users\Carmel\vclib\Science Fair\cpp\build>exit
