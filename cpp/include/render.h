@@ -1,5 +1,9 @@
 #pragma once
+#ifdef __linux__
+#include "SDL2/SDL.h"
+#else
 #include "SDL.h"
+#endif
 #include "algorithm"
 struct Point {
     int x,y;
@@ -13,7 +17,7 @@ struct Color {
     Color(int _r, int _g, int _b, int _a=0xFF): r{_r}, g{_g}, b{_b}, a{_a} {};
 };
 
-class Renderable 
+class Renderable
 {
     public:
     virtual void render(SDL_Renderer* renderer) = 0;

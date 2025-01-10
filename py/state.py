@@ -1,9 +1,10 @@
-from logger import Logger, LoggerGroup, StateLogger
+from logger import LoggerGroup, StateLogger
 from random import seed, shuffle
 
 
+# Holds maze data
 class MazeState:
-    def __init__(_, _width, _height, _logger: LoggerGroup) -> None:
+    def __init__(_, _width, _height, *, _logger: LoggerGroup = LoggerGroup()) -> None:
         _.height = _height
         _.width = _width
         _.logger = _logger
@@ -11,12 +12,14 @@ class MazeState:
             [0 if i % 2 and j % 2 else 1 for j in range(1 + 2 * _.width)]
             for i in range(1 + 2 * _.height)
         ]
+        _.usingLog = _logger is not None
 
     def __getitem__(_, loc: tuple[int, int]) -> int:
         return _.cells[loc[1]][loc[0]]
 
     def __setitem__(_, loc: tuple[int, int], val: int) -> None:
-        _.logger.setCell(_, loc, _[loc], val)
+        if _.usingLog:
+            _.logger.setCell(_, loc, _[loc], val)
         _.cells[loc[1]][loc[0]] = val
 
     def __repr__(_) -> str:
@@ -68,5 +71,6 @@ class MazeGeneratorFactory:
                     visited[n[0]][n[1]] = 1
                     stack.append(currentCell)
                     stack.append(n)
+                    _.m.logger.endStep(_.m)
                     break
         return _.m

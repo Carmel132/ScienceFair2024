@@ -1,6 +1,9 @@
 #pragma once
-
-#include <SDL.h>
+#ifdef __linux__
+#include "SDL2/SDL.h"
+#else
+#include "SDL.h"
+#endif
 #include "render.h"
 class Game {
 public:
@@ -8,7 +11,7 @@ public:
 private:
     int InitSDL();
     void CloseSDL();
-    
+
     SDL_Window *window;
     SDL_Renderer *renderer;
 };

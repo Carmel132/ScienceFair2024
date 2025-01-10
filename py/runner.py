@@ -2,6 +2,7 @@ from logger import LoggerGroup, StateLogger, MazeAction
 from state import MazeState, MazeGeneratorFactory
 
 
+# Runs MazeActions in order on maze
 class Runner:
     def __init__(self, _start: MazeState, _log: list[MazeAction]) -> None:
         self.log: list[MazeAction] = _log

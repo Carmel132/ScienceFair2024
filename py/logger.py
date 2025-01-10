@@ -1,13 +1,14 @@
-from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 
 
+# Defines basic operation on MazeState
 class MazeAction:
     def run(self, maze): ...
     def reverse(self, maze): ...
     class ActionTypes(Enum):
         SETCELL = 1
+        STEPDIVIDER = 2
 
         def __repr__(self) -> str:
             return self.name
@@ -30,6 +31,7 @@ def MazeActionClass(cls):
     return Wrapped
 
 
+# Action for modifying cell value
 @MazeActionClass
 @dataclass
 class SetCell(MazeAction):
@@ -49,10 +51,21 @@ class SetCell(MazeAction):
         return super().__repr__()
 
 
+@MazeActionClass
+class StepDivider(MazeAction):
+    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.STEPDIVIDER
+
+    def __repr__(self) -> str:
+        return "---"
+
+
+# Basic logger interface
 class Logger:
     def setCell(self, maze, loc: tuple[int, int], old: int, new: int): ...
+    def endStep(self, maze): ...
 
 
+# Logger that tracks the state of the Maze
 class StateLogger(Logger):
     def __init__(self) -> None:
         self.log: list[MazeAction] = []
@@ -61,6 +74,15 @@ class StateLogger(Logger):
         self.log.append(SetCell(loc, old, new))
 
 
+class StepLogger(Logger):
+    def __init__(self) -> None:
+        self.log: list[MazeAction] = []
+
+    def endStep(self, maze):
+        self.log.append(StepDivider())
+
+
+# Holds Logger objects, then calls their respective methods
 class LoggerGroup(Logger):
     def __init__(self, *_logs) -> None:
         self.log = []
@@ -72,6 +94,6 @@ class LoggerGroup(Logger):
         for log in self.logs:
             log.setCell(maze, loc, old, new)
 
-
-s = SetCell((1, 1), 1, 1)
-print(s)
+    def endStep(self, maze):
+        for log in self.logs:
+            log.endStep(maze)

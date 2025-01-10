@@ -1,4 +1,4 @@
-#include <game.h>
+#include "game.h"
 
 void Game::run() {
 
@@ -7,7 +7,7 @@ void Game::run() {
         SDL_Log("Failed to initalize!\n");
         return;
     }
-    
+
     bool quit = false;
     SDL_Event e;
     Renderable* obj = new OutlineColoredRect(50,50, 50,50, Color{0xFF,0,0});
@@ -25,7 +25,7 @@ void Game::run() {
         // Render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
         SDL_RenderClear(renderer);
-        
+
                 SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xff);
 
         obj->render(renderer);
@@ -33,13 +33,13 @@ void Game::run() {
         SDL_RenderPresent(renderer);
     }
 
-    
+
     // Shutdown
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 	renderer = NULL;
     window =  NULL;
-    
+
     delete obj;
 
     SDL_Quit();
@@ -48,7 +48,7 @@ void Game::run() {
 int Game::InitSDL() {
 
     int Success = 1;
-    
+
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         SDL_Log("Failed to initialize SDL! SDL_GetError: %s\n", SDL_GetError());
@@ -61,7 +61,7 @@ int Game::InitSDL() {
                                   SDL_WINDOWPOS_UNDEFINED,
                                   640,
                                   480,
-                                  0);    
+                                  0);
         if(!window)
         {
             SDL_Log("Failed to create window! SDL_GetError: %s\n", SDL_GetError());
@@ -76,13 +76,13 @@ int Game::InitSDL() {
                 Success = 0;
             }
             else
-            {   
+            {
                 SDL_SetRenderDrawColor(renderer, 0xff, 0xff, 0xff, 0xff);
-				
-		
+
+
             }
         }
     }
-    
+
     return Success;
 }
