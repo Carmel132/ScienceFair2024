@@ -24,10 +24,21 @@ public:
     SetCell(std::string log);
 };
 
+class ActionStep : public ActionPattern {
+public:
+    void add(std::shared_ptr<ActionPattern> pattern);
+    void run(std::shared_ptr<MazeState> maze);
+    void reverse(std::shared_ptr<MazeState> maze);
+private:
+    std::vector<std::shared_ptr<ActionPattern>> actions;
+};
+
+// Parses output file and provides running functionality on the provided [MazeState]
 class Runner {
 public:
-    Runner(std::shared_ptr<MazeState>* out);
-    Runner(std::string log, std::shared_ptr<MazeState>* out);
+    Runner(std::shared_ptr<MazeState>& out);
+    Runner(std::string log, std::shared_ptr<MazeState>& out);
+    Runner(std::string log);
 
     void next();
     void back();
@@ -42,7 +53,7 @@ private:
     const std::regex metaMazeSize{R"(DIM: \(([0-9]+), ([0-9]+))"};
 
     std::shared_ptr<MazeState> maze;
-    std::vector<std::unique_ptr<ActionPattern>> actions;
+    std::vector<std::unique_ptr<ActionStep>> actions;
     int idx;
-    const int metadataLines = 1;
+    const int metadataLines =1;
 };

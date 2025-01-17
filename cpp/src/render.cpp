@@ -1,5 +1,4 @@
 #include "render.h"
-
 void OutlineColoredRect::render(SDL_Renderer* renderer) {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
     SDL_Rect r = toSDL_Rect();
@@ -37,4 +36,15 @@ Rect::Rect(const Point& p1, const Point& p2){
     y = std::min(p1.y, p2.y);
     w = std::abs(p1.x-p2.x);
     h = std::abs(p1.y-p2.y);
+}
+
+void RenderCells(SDL_Renderer* renderer, const std::vector<std::vector<Point>>& points, const MazeState& maze, const ScreenDimensions& dim) {
+    for (int i = 0; i < points.size(); ++i) {
+        for (int j = 0; j < points[i].size(); ++j) {
+            if (maze.get(i, j)) {
+            Rect rect = Rect(points[i][j].x, points[i][j].y, dim.cellSize, dim.cellSize);
+            rect.render(renderer);
+            }
+        }
+    }
 }

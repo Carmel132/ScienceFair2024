@@ -12,6 +12,7 @@ from logger import LoggerGroup, StateLogger, StepLogger
 from state import MazeState, MazeGeneratorFactory
 
 s = LoggerGroup(StateLogger(), StepLogger())
-m = MazeState(5, 6, _logger=s)
+m = MazeState(100, 100, _logger=s)
 MazeGeneratorFactory(m, 4).generate()
-out((5, 6), s.log)
+print(m)
+out((100, 100), s.log)

@@ -49,17 +49,31 @@ C:\Users\User\vclib\C++\ScienceFair2024\cpp\build>echo "..\src\state.cpp"
 
 C:\Users\User\vclib\C++\ScienceFair2024\cpp\build>REM Compile the collected files 
 
-C:\Users\User\vclib\C++\ScienceFair2024\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\maze.cpp" "..\src\render.cpp" "..\src\runner.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" /link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
+C:\Users\User\vclib\C++\ScienceFair2024\cpp\build>cl /EHs /W3 /Zi ..\main.cpp "..\src\game.cpp" "..\src\maze.cpp" "..\src\render.cpp" "..\src\runner.cpp" "..\src\state.cpp" /I "..\include" /I "..\src" /I "C:\Users\User\vclib\C++\SDL2-2.0.16\include" /link /LIBPATH:"C:\Users\User\vclib\C++\SDL2-2.0.16\lib\x64" user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE 
 main.cpp
-C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\game.h(3): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
 game.cpp
-C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\game.h(3): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
 maze.cpp
 render.cpp
-C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\render.h(2): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
 runner.cpp
 state.cpp
 Generating Code...
+Microsoft (R) Incremental Linker Version 14.37.32822.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+/out:main.exe 
+/debug 
+/LIBPATH:C:\Users\User\vclib\C++\SDL2-2.0.16\lib\x64 
+user32.lib 
+SDL2main.lib 
+SDL2.lib 
+shell32.lib 
+/SUBSYSTEM:CONSOLE 
+main.obj 
+game.obj 
+maze.obj 
+render.obj 
+runner.obj 
+state.obj 
 
 C:\Users\User\vclib\C++\ScienceFair2024\cpp\build>REM Return to the original directory 
 

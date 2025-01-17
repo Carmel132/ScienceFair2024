@@ -18,8 +18,8 @@ for %%f in (!cppFiles!) do echo %%f
 REM Compile the collected files
 cl /EHs /W3 /Zi %cppFiles% ^/I "..\include" ^
 /I "..\src" ^
-/I "C:\Users\Carmel\vclib\C++\SDL2-2.30.5\include" ^
-/link /LIBPATH:"C:\Users\Carmel\vclib\C++\SDL2-2.30.5\lib\x64" ^
+/I "C:\Users\User\vclib\C++\SDL2-2.0.16\include" ^
+/link /LIBPATH:"C:\Users\User\vclib\C++\SDL2-2.0.16\lib\x64" ^
 user32.lib SDL2main.lib SDL2.lib shell32.lib /SUBSYSTEM:CONSOLE
 
 REM Return to the original directory

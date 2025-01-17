@@ -1,12 +1,15 @@
 #pragma once
+#include "state.h"
 #ifdef __linux__
 #include "SDL2/SDL.h"
 #else
 #include "SDL.h"
 #endif
 #include "algorithm"
+#include "vector"
 struct Point {
     int x,y;
+    Point(int _x, int _y) : x{_x}, y{_y} {};
 };
 
 struct Color {
@@ -15,6 +18,12 @@ struct Color {
 
     Color(): Color(0,0,0){};
     Color(int _r, int _g, int _b, int _a=0xFF): r{_r}, g{_g}, b{_b}, a{_a} {};
+};
+
+struct ScreenDimensions {
+    int pxWidth, pxHeight, cellWidth, cellHeight;
+    int cellSize;
+    int padding; // Pixel buffer between edge of screen and maze
 };
 
 class Renderable
@@ -52,3 +61,5 @@ class OutlineColoredRect : public ColoredRect {
     void render(SDL_Renderer* renderer);
     OutlineColoredRect(int _x, int _y, int _w, int _h, const Color& _color) : ColoredRect(_x,_y,_w,_h,_color) {};
 };
+
+void RenderCells(SDL_Renderer* renderer, const std::vector<std::vector<Point>>& points, const MazeState& maze, const ScreenDimensions& dim);

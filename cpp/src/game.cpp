@@ -1,5 +1,32 @@
 #include "game.h"
 
+void Game::GenerateCellPoints() {
+        int dx = std::min((screenDimensions.pxHeight-screenDimensions.padding) / screenDimensions.cellHeight, (screenDimensions.pxWidth - screenDimensions.padding) / screenDimensions.cellWidth);
+        Point centerOffset = Point((screenDimensions.pxWidth - screenDimensions.cellWidth * dx) / 2, (screenDimensions.pxHeight - screenDimensions.cellHeight * dx) / 2);
+        std::cout << "dx: " << dx << ", cox: " << centerOffset.x << ", coy: " << centerOffset.y << "\n";
+        for (int x = 0; x < screenDimensions.cellWidth; ++x) {
+            std::vector<Point> v;
+            for (int y = 0; y < screenDimensions.cellHeight; ++y) {
+                v.push_back(Point(centerOffset.x + x * dx, centerOffset.y + y * dx));
+            }
+            cellPoints.push_back(v);
+        }
+        screenDimensions.cellSize = dx;
+}
+
+void Game::GameInit() {
+    screenDimensions.cellWidth = 1+2*maze->getWidth();
+    screenDimensions.cellHeight = 1+2*maze->getHeight();
+    OnScreenUpdate();
+}
+
+void Game::OnScreenUpdate() {
+    SDL_GetWindowSize(window, &screenDimensions.pxWidth, &screenDimensions.pxHeight);
+
+    std::cerr << screenDimensions.pxWidth << ", " << screenDimensions.pxHeight << "\n";
+    GenerateCellPoints();
+}
+
 void Game::run() {
 
     if(!InitSDL())
@@ -7,10 +34,18 @@ void Game::run() {
         SDL_Log("Failed to initalize!\n");
         return;
     }
+    //runner.end();
+    std::cerr << "\n" << maze->toString() << "\n";
+    GameInit();
 
+    for (const std::vector<Point>& r : cellPoints) {
+        for (const Point& p : r){
+            std::cout << p.x << ", " << p.y << "\n";
+        }
+    }
+    runner.end();
     bool quit = false;
     SDL_Event e;
-    Renderable* obj = new OutlineColoredRect(50,50, 50,50, Color{0xFF,0,0});
     while(!quit)
     {
         // Event
@@ -20,15 +55,18 @@ void Game::run() {
             {
                 quit = true;
             }
+
         }
 
+        //runner.next();
         // Render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xff);
         SDL_RenderClear(renderer);
 
-                SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xff);
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xff);
 
-        obj->render(renderer);
+        RenderCells(renderer, cellPoints, *maze, screenDimensions);
+
 
         SDL_RenderPresent(renderer);
     }
@@ -39,8 +77,6 @@ void Game::run() {
     SDL_DestroyWindow(window);
 	renderer = NULL;
     window =  NULL;
-
-    delete obj;
 
     SDL_Quit();
 }

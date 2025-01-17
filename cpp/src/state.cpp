@@ -20,6 +20,14 @@ std::string MazeState::toString() const {
 
 }
 
+MazeState::MazeState() {
+    width = 1;
+    height = 1;
+
+    cells = std::vector<std::vector<int>>();
+    std::cerr << "Called default maze constructor\n";
+}
+
 MazeState::MazeState(int _width, int _height) {
     width = _width;
     height = _height;
@@ -30,4 +38,5 @@ MazeState::MazeState(int _width, int _height) {
             cells[i].push_back((int)!(i%2 && j%2));
         }
     }
+    std::cerr << "Called maze constructor\n";
 }

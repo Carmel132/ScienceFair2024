@@ -1,7 +1,8 @@
 #include "runner.h"
+#include <memory>
 
 void Runner::end() {
-    while (idx < actions.size()-1) {
+    while (idx < actions.size()) {
         next();
     }
 }
@@ -12,7 +13,7 @@ void Runner::start() {
     }
 }
 
-Runner::Runner(std::shared_ptr<MazeState>* out) 
+Runner::Runner(std::shared_ptr<MazeState>& out)
     : Runner([&]() -> std::string {
         std::ifstream file("../../out.txt");
         if (!file.is_open()) {
@@ -36,35 +37,46 @@ void Runner::back() {
 
 void Runner::next() {
     std::cout << "in next: " << actions.size() << '\n';
-    if (idx >= actions.size()-1) {
+    if (idx >= actions.size()) {
         std::cerr << "Cannot move forward!\n";
         return;
     }
-    idx++;
     actions.at(idx)->run(maze);
+    idx++;
 }
 
 void Runner::parseLines(std::vector<std::string> lines) {
-    actions = std::vector<std::unique_ptr<ActionPattern>>();
+    actions = std::vector<std::unique_ptr<ActionStep>>();
+    ActionStep* action = new ActionStep();
     for (int i = metadataLines; i < lines.size(); ++i) {
+        if (lines[i].compare("---")==0) {
+            actions.push_back(std::unique_ptr<ActionStep>(action));
+            action = new ActionStep();
+            continue;
+        }
         std::smatch matches;
         if (std::regex_search(lines[i], matches, parseLineRegex)) {
             if (matches[1].compare("SETCELL")==0) {
-                actions.push_back(std::make_unique<SetCell>(lines[i]));
+                action->add(std::make_unique<SetCell>(lines[i]));
             }
         }
         else {
-            std::cerr << "Could not identify action: " << lines[i];
+            std::cerr << "(57) Could not identify action: " << lines[i] << "\n";
         }
 
     }
 }
 
-Runner::Runner(std::string log, std::shared_ptr<MazeState>* out) {
+Runner::Runner(std::string log, std::shared_ptr<MazeState>& out) : Runner(log) {
+    std::cout << "Called new constructor";
+    out = maze;
+}
+
+Runner::Runner(std::string log) {
     std::istringstream stream(log);
     std::string line;
     std::vector<std::string> lines;
-
+    std::cout << "reached constructor";
     while(std::getline(stream, line)){
         lines.push_back(line);
     }
@@ -73,6 +85,7 @@ Runner::Runner(std::string log, std::shared_ptr<MazeState>* out) {
     std::string meta_mazeSize = lines[0];
     if (std::regex_search(meta_mazeSize, matches, metaMazeSize)) {
         try {
+            std::cout << "got to make maze";
             maze =std::make_shared<MazeState>(std::stoi(matches[1].str()), std::stoi(matches[2].str()));
         }
         catch (const std::exception& e) {
@@ -82,13 +95,10 @@ Runner::Runner(std::string log, std::shared_ptr<MazeState>* out) {
 
     }
     else {
-        std::cerr << "Error: Couldn't instatiate Runner object: Failed to parse Maze Size metadata\n";
+        std::cerr << "(86) Couldn't instatiate Runner object: Failed to parse Maze Size metadata\n";
     }
 
     idx = 0;
-    if (out) {
-        *out = maze;
-    }
 
     parseLines(lines);
 }
@@ -109,6 +119,23 @@ SetCell::SetCell(std::string log) {
         _new = std::stoi(matches[4].str());
     }
     else {
-        std::cerr << "Error: Unable to read input. Given string: " << log << "\n";
+        std::cerr << "(112) Unable to read input. Given string: " << log << "\n";
+    }
+}
+
+void ActionStep::add(std::shared_ptr<ActionPattern> action) {
+    actions.push_back(action);
+}
+
+void ActionStep::run(std::shared_ptr<MazeState> maze) {
+    for (auto action : actions) {
+        action -> run(maze);
+    }
+}
+
+
+void ActionStep::reverse(std::shared_ptr<MazeState> maze) {
+    for (auto action : actions) {
+        action -> reverse(maze);
     }
 }
