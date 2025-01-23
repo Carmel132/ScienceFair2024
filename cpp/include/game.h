@@ -9,25 +9,25 @@
 #include <iostream>
 #include <vector>
 #include "runner.h"
+
 class Game {
 public:
     void run();
 
-    Game() :/*maze{new MazeState(1,1)},*/ runner{maze}, screenDimensions{} {screenDimensions = ScreenDimensions();}
+    Game() :/*maze{new MazeState(1,1)},*/ runner{maze}, screenDimensions{}, gameRenderer{} {screenDimensions = ScreenDimensions();}
 private:
     int InitSDL();
 
     void GameInit();
 
     void OnScreenUpdate();
-    void GenerateCellPoints();
+    void OnKeyPress(SDL_Keysym key);
 
-    std::vector<std::vector<Point>> cellPoints;
+    void next();
+    void back();
+
     ScreenDimensions screenDimensions;
-
+    GameRenderer gameRenderer;
     std::shared_ptr<MazeState> maze;
     Runner runner;
-
-    SDL_Window *window;
-    SDL_Renderer *renderer;
 };
