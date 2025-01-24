@@ -9,6 +9,9 @@ class MazeAction:
     class ActionTypes(Enum):
         SETCELL = 1
         STEPDIVIDER = 2
+        GETCELL = 3
+        ADDTOPATH = 4
+        PHASEDIVIDER = 5
 
         def __repr__(self) -> str:
             return self.name
@@ -57,12 +60,41 @@ class StepDivider(MazeAction):
 
     def __repr__(self) -> str:
         return "---"
+@MazeActionClass
+@dataclass
+class PhaseDivider(MazeAction):
+    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.PHASEDIVIDER
 
+    def __repr__(self) -> str:
+        return ">>> "
+
+@MazeActionClass
+@dataclass
+class GetCell(MazeAction):
+    loc: tuple[int, int]
+    val: int
+
+    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.GETCELL
+
+    def __repr__(self):
+        return super().__repr__()
+
+@MazeActionClass
+@dataclass
+class AddToPath(MazeAction):
+    loc: tuple[int, int]
+
+    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.ADDTOPATH
+
+    def __repr__(self):
+        return super().__repr__()
 
 # Basic logger interface
 class Logger:
     def setCell(self, maze, loc: tuple[int, int], old: int, new: int): ...
+    def getCell(self, maze, loc: tuple[int, int], val: int): ...
     def endStep(self, maze): ...
+    def addToPath(self, maze, loc: tuple[int, int]): ...
 
 
 # Logger that tracks the state of the Maze
@@ -73,6 +105,9 @@ class StateLogger(Logger):
     def setCell(self, maze, loc: tuple[int, int], old: int, new: int):
         self.log.append(SetCell(loc, old, new))
 
+    def getCell(self, maze, loc: tuple[int, int], val: int): 
+        self.log.append(GetCell(loc, val))
+
 
 class StepLogger(Logger):
     def __init__(self) -> None:
@@ -81,6 +116,11 @@ class StepLogger(Logger):
     def endStep(self, maze):
         self.log.append(StepDivider())
 
+class PathLogger(Logger):
+    def __init__(self) -> None:
+        self.log: list[MazeAction] = []
+    def addToPath(self, maze, loc: tuple[int, int]):
+        self.log.append(AddToPath(loc))
 
 # Holds Logger objects, then calls their respective methods
 class LoggerGroup(Logger):
@@ -94,6 +134,14 @@ class LoggerGroup(Logger):
         for log in self.logs:
             log.setCell(maze, loc, old, new)
 
+    def getCell(self, maze, loc: tuple[int, int], val: int):
+        for log in self.logs:
+            log.getCell(maze, loc, val)
+
     def endStep(self, maze):
         for log in self.logs:
             log.endStep(maze)
+
+    def addToPath(self, maze, loc: tuple[int, int]):
+        for log in self.logs:
+            log.addToPath(maze, loc)

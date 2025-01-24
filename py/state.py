@@ -15,7 +15,10 @@ class MazeState:
         _.usingLog = _logger is not None
 
     def __getitem__(_, loc: tuple[int, int]) -> int:
-        return _.cells[loc[1]][loc[0]]
+        val = _.cells[loc[1]][loc[0]]
+        _.logger.getCell(_, loc, val)
+        return val
+
 
     def __setitem__(_, loc: tuple[int, int], val: int) -> None:
         if _.usingLog:
@@ -74,3 +77,12 @@ class MazeGeneratorFactory:
                     _.m.logger.endStep(_.m)
                     break
         return _.m
+    
+class Path:
+    def __init__(self, maze:MazeState) -> None:
+        self.maze = maze
+        self.path: list[tuple[int, int]] = []
+    
+    def add(self, pos:tuple[int, int]) -> None:
+        self.path.append(pos)
+        self.maze.logger.addToPath(self.maze, pos)

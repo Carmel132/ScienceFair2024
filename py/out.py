@@ -8,11 +8,12 @@ def out(dim: tuple[int, int], log: list[MazeAction], filename="out.txt"):
         file.write("\n".join(map(repr, log)))
 
 
-from logger import LoggerGroup, StateLogger, StepLogger
+from logger import LoggerGroup, StateLogger, StepLogger, PathLogger
 from state import MazeState, MazeGeneratorFactory
-
-s = LoggerGroup(StateLogger(), StepLogger())
-m = MazeState(100, 100, _logger=s)
+from algorithms import RightHandRule
+s = LoggerGroup(StateLogger(), PathLogger(), StepLogger())
+m = MazeState(6, 5, _logger=s)
 MazeGeneratorFactory(m, 4).generate()
-print(m)
-out((100, 100), s.log)
+RightHandRule(m).run()
+
+out((m.width, m.height), s.log)
