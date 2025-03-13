@@ -1,0 +1,4 @@
+CompileFlags: # Tweak the parse settings, example directory given to show format
+  Add:
+    - "-IC:/Users/User/vclib/C++/ScienceFair2024/cpp/include"
+    - "-IC:/Users/User/vclib/C++/SDL2-2.0.16/include"

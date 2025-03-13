@@ -1,42 +1,43 @@
-from logger import LoggerGroup, StateLogger
+from logger import LoggerGroup
 from random import seed, shuffle
 
 
 # Holds maze data
 class MazeState:
-    def __init__(_, _width, _height, *, _logger: LoggerGroup = LoggerGroup()) -> None:
-        _.height = _height
-        _.width = _width
-        _.logger = _logger
-        _.cells = [
-            [0 if i % 2 and j % 2 else 1 for j in range(1 + 2 * _.width)]
-            for i in range(1 + 2 * _.height)
+    def __init__(
+        self, _width, _height, *, _logger: LoggerGroup = LoggerGroup()
+    ) -> None:
+        self.height = _height
+        self.width = _width
+        self.logger = _logger
+        self.cells = [
+            [0 if i % 2 and j % 2 else 1 for j in range(1 + 2 * self.width)]
+            for i in range(1 + 2 * self.height)
         ]
-        _.usingLog = _logger is not None
+        self.usingLog = _logger is not None
 
-    def __getitem__(_, loc: tuple[int, int]) -> int:
-        val = _.cells[loc[1]][loc[0]]
-        _.logger.getCell(_, loc, val)
+    def __getitem__(self, loc: tuple[int, int]) -> int:
+        val = self.cells[loc[1]][loc[0]]
+        self.logger.getCell(self, loc, val)
         return val
 
+    def __setitem__(self, loc: tuple[int, int], val: int) -> None:
+        if self.usingLog:
+            self.logger.setCell(self, loc, self[loc], val)
+        self.cells[loc[1]][loc[0]] = val
 
-    def __setitem__(_, loc: tuple[int, int], val: int) -> None:
-        if _.usingLog:
-            _.logger.setCell(_, loc, _[loc], val)
-        _.cells[loc[1]][loc[0]] = val
-
-    def __repr__(_) -> str:
-        return "\n".join(map(lambda row: " ".join(map(str, row)), _.cells))
+    def __repr__(self) -> str:
+        return "\n".join(map(lambda row: " ".join(map(str, row)), self.cells))
 
 
 # Uses a breadth-first algorithm to generate random maze walls
 class MazeGeneratorFactory:
     directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # Right, down, left, up
 
-    def __init__(_, _m: MazeState, _seed: int) -> None:
+    def __init__(self, _m: MazeState, _seed: int) -> None:
         seed(_seed)
-        _.m = _m
-        _.directions = MazeGeneratorFactory.directions
+        self.m = _m
+        self.directions = MazeGeneratorFactory.directions
 
     @staticmethod
     def isValidMove(
@@ -50,9 +51,11 @@ class MazeGeneratorFactory:
             and not _visited[next[0]][next[1]]
         )
 
-    def generate(_) -> MazeState:
+    def generate(self) -> MazeState:
+        self.m.logger.newPhase("GenerateMaze")
         visited = [
-            [0 for j in range(1 + 2 * _.m.width)] for i in range(1 + 2 * _.m.height)
+            [0 for j in range(1 + 2 * self.m.width)]
+            for i in range(1 + 2 * self.m.height)
         ]
 
         stack = [(0, 0)]
@@ -60,11 +63,13 @@ class MazeGeneratorFactory:
 
         while len(stack) != 0:
             currentCell = stack.pop()
-            shuffle(_.directions)
-            for direction in _.directions:
+            shuffle(self.directions)
+            for direction in self.directions:
                 n = (currentCell[0] + direction[0], currentCell[1] + direction[1])
-                if MazeGeneratorFactory.isValidMove(n, _.m.width, _.m.height, visited):
-                    _.m[
+                if MazeGeneratorFactory.isValidMove(
+                    n, self.m.width, self.m.height, visited
+                ):
+                    self.m[
                         (
                             2 * currentCell[0] + 1 + direction[0],
                             2 * currentCell[1] + 1 + direction[1],
@@ -74,15 +79,17 @@ class MazeGeneratorFactory:
                     visited[n[0]][n[1]] = 1
                     stack.append(currentCell)
                     stack.append(n)
-                    _.m.logger.endStep(_.m)
+                    self.m.logger.endStep(self.m)
                     break
-        return _.m
-    
+        return self.m
+
+
 class Path:
-    def __init__(self, maze:MazeState) -> None:
+    def __init__(self, maze: MazeState) -> None:
         self.maze = maze
         self.path: list[tuple[int, int]] = []
-    
-    def add(self, pos:tuple[int, int]) -> None:
+
+    def add(self, pos: tuple[int, int]) -> None:
         self.path.append(pos)
         self.maze.logger.addToPath(self.maze, pos)
+
