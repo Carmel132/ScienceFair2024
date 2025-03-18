@@ -24,7 +24,8 @@ add_executable(${PROJECT_NAME} ${ROOT_FILES} ${SRC_FILES})
 
 # Specify the SDL2 library directory in lib/x64.
 link_directories("C:/Users/User/vclib/C++/SDL2-2.0.16/lib/x64")
-
+# Enable C++ 17
+#target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 # Link against the SDL2 libraries.
 target_link_libraries(${PROJECT_NAME}
     "C:/Users/User/vclib/C++/SDL2-2.0.16/lib/x64/SDL2main.lib"

@@ -30,30 +30,43 @@ Runner::Runner(std::shared_ptr<MazeState> &out)
           out) {}
 // Next Step
 void Runner::back() {
-  if (phaseIdx <= 0) {
-    std::cerr << "Cannot move backward!\n";
+  ActionPhaseRunner &actionPhaseRunner = actions.at(phaseIdx);
+  actionPhaseRunner.get()->reverse(maze);
+  bool atBackBound = actionPhaseRunner.back();
+  if (atBackBound) {
+    if (phaseIdx <= 0) {
+      std::cerr << "Cannot move phase backward!\n";
+      return;
+    }
+    phaseIdx--;
     return;
   }
-  phaseIdx--;
-  actions.at(phaseIdx)->reverse(maze);
 }
 // Next Step
 void Runner::next() {
-  std::cout << "in next: " << actions.size() << '\n';
-  if (phaseIdx >= actions.size()) {
-    std::cerr << "Cannot move forward!\n";
+  std::cout << "Phase Idx: " << phaseIdx << "\n";
+  ActionPhaseRunner &actionPhaseRunner = actions.at(phaseIdx);
+
+  actionPhaseRunner.get()->run(maze);
+  bool atFrontBound = actionPhaseRunner.next();
+  if (atFrontBound) {
+    if (phaseIdx >= actions.size() - 1) {
+      std::cerr << "Cannot move forward!\n";
+      return;
+    }
+    phaseIdx++;
     return;
   }
-  actions.at(phaseIdx)->run(maze);
-  phaseIdx++;
 }
 
 // TODO: Refactor [Runner::parseLines] into more functions
 void Runner::parseLines(std::vector<std::string> lines) {
-  actions = std::vector<std::unique_ptr<ActionPhase>>();
-  ActionPhase *actionPhase;
+  actions = std::vector<ActionPhaseRunner>();
+  ActionPhase *actionPhase = 0;
   ActionStep *actionStep = new ActionStep();
   for (int i = Runner::metadataLines; i < lines.size(); ++i) {
+    std::string __s = lines[i];
+
     // "---" indicates end of [ActionStep]
     if (lines[i].compare("---") == 0) {
       actionPhase->add(std::unique_ptr<ActionStep>(actionStep));
@@ -62,20 +75,26 @@ void Runner::parseLines(std::vector<std::string> lines) {
     }
     std::smatch matches;
 
-    // ">>>" indicates end of [ActionPhase]/*
-    if (std::regex_search(lines[i], matches, ActionPhase::pattern)) {
-      if (!actionPhase)
-        actions.push_back(std::unique_ptr<ActionPhase>(actionPhase));
+    // ">>>" indicates start of [ActionPhase]/*
+    if (std::regex_search(lines[i], matches, ActionPhase::getPattern())) {
+      if (actionPhase) {
+        actions.push_back(
+            ActionPhaseRunner(std::unique_ptr<ActionPhase>(actionPhase)));
+      }
       actionPhase = new ActionPhase(matches[1]);
       continue;
     }
-    if (std::regex_search(lines[i], matches, Runner::parseLineRegex)) {
+    if (std::regex_search(lines[i], matches, Runner::getParseLinePattern())) {
       if (matches[1].compare("SETCELL") == 0) {
         actionStep->add(std::make_unique<SetCell>(lines[i]));
       }
     } else {
       std::cerr << "(57) Could not identify action: " << lines[i] << "\n";
     }
+  }
+  if (actionPhase) {
+    actions.push_back(
+        ActionPhaseRunner(std::unique_ptr<ActionPhase>(actionPhase)));
   }
 }
 
@@ -95,7 +114,7 @@ Runner::Runner(std::string log) {
 
   std::smatch matches;
   std::string meta_mazeSize = lines[0];
-  if (std::regex_search(meta_mazeSize, matches, metaMazeSize)) {
+  if (std::regex_search(meta_mazeSize, matches, getMetaMazeSizePattern())) {
     try {
       std::cout << "got to make maze";
       maze = std::make_shared<MazeState>(std::stoi(matches[1].str()),
@@ -113,6 +132,7 @@ Runner::Runner(std::string log) {
   phaseIdx = 0;
 
   parseLines(lines);
+  std::cout << actions.size();
 }
 
 void SetCell::reverse(std::shared_ptr<MazeState> maze) {
@@ -125,7 +145,7 @@ void SetCell::run(std::shared_ptr<MazeState> maze) {
 
 SetCell::SetCell(std::string log) {
   std::smatch matches;
-  if (std::regex_search(log, matches, pattern)) {
+  if (std::regex_search(log, matches, SetCell::getPattern())) {
     loc = std::pair<int, int>(std::stoi(matches[1].str()),
                               std::stoi(matches[2].str()));
     old = std::stoi(matches[3].str());
@@ -165,4 +185,8 @@ void ActionPhase::reverse(std::shared_ptr<MazeState> maze) {
   for (auto action : actions) {
     action->reverse(maze);
   }
+}
+
+std::shared_ptr<ActionStep> ActionPhase::get(int idx) const {
+  return actions.at(idx);
 }

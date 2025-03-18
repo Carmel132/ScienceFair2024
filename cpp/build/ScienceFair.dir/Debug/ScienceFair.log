@@ -1,0 +1,9 @@
+﻿  main.cpp
+C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\runner.h(52,51): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  game.cpp
+C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\runner.h(52,51): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  runner.cpp
+C:\Users\User\vclib\C++\ScienceFair2024\cpp\include\runner.h(52,51): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+C:\Users\User\vclib\C++\ScienceFair2024\cpp\src\runner.cpp(76): warning C4700: uninitialized local variable 'actionPhase' used
+  ScienceFair.vcxproj -> C:\Users\User\vclib\C++\ScienceFair2024\cpp\build\Debug\ScienceFair.exe
