@@ -28,6 +28,21 @@ public:
   SetCell(std::string log);
 };
 
+class GetCell : public ActionPattern {
+public:
+  static const std::regex &getPattern() {
+    const static std::regex pattern{
+        R"(loc=\(([0-9]+), ([0-9]+)\), val=([0-9]+))"};
+    return pattern;
+  }
+
+  std::pair<int, int> loc;
+  int val;
+  void run(std::shared_ptr<MazeState> maze);
+  void reverse(std::shared_ptr<MazeState> maze);
+  GetCell(std::string log);
+};
+
 class ActionStep : public ActionPattern {
 public:
   void add(std::shared_ptr<ActionPattern> pattern);

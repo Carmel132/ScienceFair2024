@@ -28,6 +28,10 @@ Runner::Runner(std::shared_ptr<MazeState> &out)
             return oss.str();
           }(),
           out) {}
+
+// TODO: Fix bug where you have to click twice when changing from moving forward
+// to backward and vice versa
+
 // Next Step
 void Runner::back() {
   ActionPhaseRunner &actionPhaseRunner = actions.at(phaseIdx);
@@ -166,8 +170,8 @@ void ActionStep::run(std::shared_ptr<MazeState> maze) {
 }
 
 void ActionStep::reverse(std::shared_ptr<MazeState> maze) {
-  for (auto action : actions) {
-    action->reverse(maze);
+  for (int i = actions.size() - 1; i >= 0; --i) {
+    actions.at(i)->reverse(maze);
   }
 }
 
@@ -182,8 +186,8 @@ void ActionPhase::run(std::shared_ptr<MazeState> maze) {
 }
 
 void ActionPhase::reverse(std::shared_ptr<MazeState> maze) {
-  for (auto action : actions) {
-    action->reverse(maze);
+  for (size_t i = actions.size() - 1; i >= 0; --i) {
+    actions.at(i)->reverse(maze);
   }
 }
 
