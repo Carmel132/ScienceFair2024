@@ -42,14 +42,3 @@ class RightHandRule(Algorithm):
                 else:
                     currentDir = (currentDir - 1) % 4
             self.maze.logger.endStep(self.maze)
-
-
-mazeLogger = LoggerGroup(StateLogger(), PathLogger(), StepLogger())
-m = MazeState(5, 6, _logger=mazeLogger)
-MazeGeneratorFactory(m, 2).generate()
-print(m)
-r = RightHandRule(m)
-r.run()
-# print(r.path)
-
-print(mazeLogger.log)
