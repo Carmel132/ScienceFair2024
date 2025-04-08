@@ -1,5 +1,5 @@
-from state import MazeState, Path, MazeGeneratorFactory
-from logger import LoggerGroup, StateLogger, StepLogger, PathLogger
+from .state import MazeState, Path, MazeGeneratorFactory
+from .logger import LoggerGroup, StateLogger, StepLogger, PathLogger
 
 
 class Algorithm:

@@ -1,5 +1,5 @@
-from logger import LoggerGroup, StateLogger, MazeAction
-from state import MazeState, MazeGeneratorFactory
+from .logger import LoggerGroup, StateLogger, MazeAction
+from .state import MazeState, MazeGeneratorFactory
 
 
 # Runs MazeActions in order on maze

@@ -1,4 +1,4 @@
-from logger import LoggerGroup
+from maze.logger import LoggerGroup
 from random import seed, shuffle
 
 
@@ -16,6 +16,7 @@ class MazeState:
         ]
         self.usingLog = _logger is not None
 
+    # (x, y)
     def __getitem__(self, loc: tuple[int, int]) -> int:
         val = self.cells[loc[1]][loc[0]]
         self.logger.getCell(self, loc, val)
@@ -92,4 +93,3 @@ class Path:
     def add(self, pos: tuple[int, int]) -> None:
         self.path.append(pos)
         self.maze.logger.addToPath(self.maze, pos)
-

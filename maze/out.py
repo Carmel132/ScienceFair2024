@@ -1,4 +1,4 @@
-from logger import (
+from .logger import (
     LoggerGroup,
     StateLogger,
     StepLogger,
@@ -6,8 +6,8 @@ from logger import (
     MazeAction,
     PhaseLogger,
 )
-from state import MazeState, MazeGeneratorFactory
-from algorithms import RightHandRule
+from .state import MazeState, MazeGeneratorFactory
+from .algorithms import RightHandRule
 
 
 # Outputs a MazeAction list to a text file
