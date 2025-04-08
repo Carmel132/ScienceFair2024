@@ -83,6 +83,14 @@ class MazeGeneratorFactory:
                     self.m.logger.endStep(self.m)
                     break
         return self.m
+    
+    def hasAdjacent(self, point: tuple[int, int], val:int ) -> bool:
+        for direction in self.directions:
+            if self.m[
+                (point[0] + direction[0], point[1] + direction[1])
+            ] == val:
+                return True
+        return False
 
 
 class Path:

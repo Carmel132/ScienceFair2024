@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import pygame as pg
 
-from ...maze.state import MazeState
+from maze.state import MazeState
 
 # Padding about the border of the rendered maze so as to not cover an entire axis
 SCREEN_BORDER_PADDING: int = 20
@@ -24,8 +24,8 @@ class ScreenData:
     ) -> list[list[tuple[int, int]]]:
         return list(
             map(
-                list(
-                    lambda x: map(
+                
+                    lambda x: list(map(
                         lambda y: (
                             centerOffset[0] + x * cellEdge,
                             centerOffset[1] + y * cellEdge,
@@ -44,7 +44,7 @@ class ScreenData:
         return list(
             map(
                 lambda cellRow: list(
-                    map(lambda p: pg.Rect(p[0], p[1], cellEdge, cellEdge), cellRow)
+                    map(lambda p: pg.Rect(p[0], p[1], cellEdge+1, cellEdge+1), cellRow)
                 ),
                 cellPoints,
             )

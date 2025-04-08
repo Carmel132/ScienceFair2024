@@ -28,7 +28,7 @@ class Game:
     def __init__(self):
         pass
 
-    def run() -> None:
+    def run(self) -> None:
         pg.init()
         screen = pg.display.set_mode()
         maze = MazeState(6, 6)
@@ -44,3 +44,4 @@ class Game:
             # Render
             rend.render()
             pg.display.update()
+Game().run()
