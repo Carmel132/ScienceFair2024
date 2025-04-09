@@ -21,12 +21,8 @@ print(s.log)
 from engine.render.screen_data import ScreenData
 from maze.state import MazeState
 from engine.render.maze_renderer import MazeRenderer
-from engine.player.action_group import MazeActionPlayer
 import pygame as pg
 from engine.player.log_groups import generatePhasePlayer
-
-f = generatePhasePlayer(m, m.logger.log)
-print(1)
 
 
 class Game:
@@ -38,7 +34,7 @@ class Game:
         screen = pg.display.set_mode((800, 800))
         maze = MazeState(6, 5)
         rend = MazeRenderer(ScreenData.generateScreenData(screen, maze), maze)
-        act = MazeActionPlayer(maze, *m.logger.log)
+        act = generatePhasePlayer(maze, m.logger.log)
         while True:
             # Events
             for event in pg.event.get():
