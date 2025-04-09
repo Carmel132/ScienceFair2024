@@ -21,6 +21,7 @@ print(s.log)
 from engine.render.screen_data import ScreenData
 from maze.state import MazeState
 from engine.render.maze_renderer import MazeRenderer
+from engine.player.action_group import MazeActionPlayer
 import pygame as pg
 
 
@@ -30,9 +31,10 @@ class Game:
 
     def run(self) -> None:
         pg.init()
-        screen = pg.display.set_mode()
-        maze = MazeState(6, 6)
+        screen = pg.display.set_mode((800, 800))
+        maze = MazeState(6, 5)
         rend = MazeRenderer(ScreenData.generateScreenData(screen, maze), maze)
+        act = MazeActionPlayer(maze, *m.logger.log)
         while True:
             # Events
             for event in pg.event.get():
@@ -40,8 +42,17 @@ class Game:
                     return
                 if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     return
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_RIGHT:
+                        act.next()
+                    if event.key == pg.K_LEFT:
+                        act.prev()
 
             # Render
+            pg.display.flip()
+            screen.fill((0, 0, 0))
             rend.render()
             pg.display.update()
+
+
 Game().run()

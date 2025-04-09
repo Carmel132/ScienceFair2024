@@ -25,7 +25,7 @@ class MazeAction:
         return ", ".join(f"{key}={repr(item)}" for (key, item) in self.__dict__.items())
 
 
-def MazeActionClass(cls):
+def _MazeActionClass(cls):
     originalRepr = cls.__repr__ if hasattr(cls, "__repr__") else None
 
     class Wrapped(cls):
@@ -38,7 +38,7 @@ def MazeActionClass(cls):
 
 
 # Action for modifying cell value
-@MazeActionClass
+@_MazeActionClass
 @dataclass
 class SetCell(MazeAction):
     loc: tuple[int, int]
@@ -48,16 +48,16 @@ class SetCell(MazeAction):
     TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.SETCELL
 
     def run(self, maze):
-        maze.cells[self.loc[0]][self.loc[1]] = self.new
+        maze.cells[self.loc[1]][self.loc[0]] = self.new
 
     def reverse(self, maze):
-        maze.cells[self.loc[0]][self.loc[1]] = self.old
+        maze.cells[self.loc[1]][self.loc[0]] = self.old
 
     def __repr__(self) -> str:
         return super().__repr__()
 
 
-@MazeActionClass
+@_MazeActionClass
 class StepDivider(MazeAction):
     TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.STEPDIVIDER
 
@@ -65,7 +65,7 @@ class StepDivider(MazeAction):
         return "---"
 
 
-@MazeActionClass
+@_MazeActionClass
 @dataclass
 class PhaseDivider(MazeAction):
     name: str
@@ -75,7 +75,7 @@ class PhaseDivider(MazeAction):
         return ">>> " + self.name
 
 
-@MazeActionClass
+@_MazeActionClass
 @dataclass
 class GetCell(MazeAction):
     loc: tuple[int, int]
@@ -87,7 +87,7 @@ class GetCell(MazeAction):
         return super().__repr__()
 
 
-@MazeActionClass
+@_MazeActionClass
 @dataclass
 class AddToPath(MazeAction):
     loc: tuple[int, int]

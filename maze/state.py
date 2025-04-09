@@ -1,6 +1,8 @@
 from maze.logger import LoggerGroup
 from random import seed, shuffle
 
+AXIAL_DIRECTIONS = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # Right, down, left, up
+
 
 # Holds maze data
 class MazeState:
@@ -30,15 +32,18 @@ class MazeState:
     def __repr__(self) -> str:
         return "\n".join(map(lambda row: " ".join(map(str, row)), self.cells))
 
+    def hasAdjacent(self, point: tuple[int, int], val: int) -> bool:
+        for direction in AXIAL_DIRECTIONS:
+            if self[(point[0] + direction[0], point[1] + direction[1])] == val:
+                return True
+        return False
+
 
 # Uses a breadth-first algorithm to generate random maze walls
 class MazeGeneratorFactory:
-    directions = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # Right, down, left, up
-
     def __init__(self, _m: MazeState, _seed: int) -> None:
         seed(_seed)
         self.m = _m
-        self.directions = MazeGeneratorFactory.directions
 
     @staticmethod
     def isValidMove(
@@ -64,8 +69,8 @@ class MazeGeneratorFactory:
 
         while len(stack) != 0:
             currentCell = stack.pop()
-            shuffle(self.directions)
-            for direction in self.directions:
+            shuffle(AXIAL_DIRECTIONS)
+            for direction in AXIAL_DIRECTIONS:
                 n = (currentCell[0] + direction[0], currentCell[1] + direction[1])
                 if MazeGeneratorFactory.isValidMove(
                     n, self.m.width, self.m.height, visited
@@ -83,14 +88,6 @@ class MazeGeneratorFactory:
                     self.m.logger.endStep(self.m)
                     break
         return self.m
-    
-    def hasAdjacent(self, point: tuple[int, int], val:int ) -> bool:
-        for direction in self.directions:
-            if self.m[
-                (point[0] + direction[0], point[1] + direction[1])
-            ] == val:
-                return True
-        return False
 
 
 class Path:

@@ -24,8 +24,8 @@ class ScreenData:
     ) -> list[list[tuple[int, int]]]:
         return list(
             map(
-                
-                    lambda x: list(map(
+                lambda x: list(
+                    map(
                         lambda y: (
                             centerOffset[0] + x * cellEdge,
                             centerOffset[1] + y * cellEdge,
@@ -44,7 +44,10 @@ class ScreenData:
         return list(
             map(
                 lambda cellRow: list(
-                    map(lambda p: pg.Rect(p[0], p[1], cellEdge+1, cellEdge+1), cellRow)
+                    map(
+                        lambda p: pg.Rect(p[0], p[1], cellEdge + 1, cellEdge + 1),
+                        cellRow,
+                    )
                 ),
                 cellPoints,
             )
@@ -56,12 +59,12 @@ class ScreenData:
         cellHeight = 1 + 2 * maze.height
 
         dx = min(
-            (screen.get_height() - SCREEN_BORDER_PADDING) / cellHeight,
-            (screen.get_width() - SCREEN_BORDER_PADDING) / cellWidth,
+            (screen.get_height() - 2 * SCREEN_BORDER_PADDING) / cellHeight,
+            (screen.get_width() - 2 * SCREEN_BORDER_PADDING) / cellWidth,
         )
         centerOffset = (
-            screen.get_width() - cellWidth * dx,
-            screen.get_height() - cellHeight * dx,
+            screen.get_width() - cellWidth * dx - SCREEN_BORDER_PADDING,
+            screen.get_height() - cellHeight * dx - SCREEN_BORDER_PADDING,
         )
         cellPoints = ScreenData.generateCellPoints(
             centerOffset, cellWidth, cellHeight, dx
