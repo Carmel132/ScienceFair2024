@@ -23,6 +23,10 @@ from maze.state import MazeState
 from engine.render.maze_renderer import MazeRenderer
 from engine.player.action_group import MazeActionPlayer
 import pygame as pg
+from engine.player.log_groups import generatePhasePlayer
+
+f = generatePhasePlayer(m, m.logger.log)
+print(1)
 
 
 class Game:
