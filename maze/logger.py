@@ -40,14 +40,19 @@ class StepLogger(Logger):
 
 
 class PathLogger(Logger):
-    def __init__(self) -> None:
+    def __init__(self, _path: list[tuple[int, int]]) -> None:
         self.log: list[MazeAction] = []
+        self.path = _path
 
     def addToPath(self, maze, loc: tuple[int, int]):
-        self.log.append(AddToPath(loc))
+        a = AddToPath(loc)
+        a.path = self.path
+        self.log.append(a)
 
     def removeFromPath(self, maze, i: int = -1):
-        self.log.append(RemoveFromPath(i))
+        a = RemoveFromPath(i)
+        a.path = self.path
+        self.log.append(a)
 
 
 class PhaseLogger(Logger):

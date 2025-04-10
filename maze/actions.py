@@ -1,5 +1,5 @@
 # Defines basic operation on MazeState
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from engine.render.action_renderer import ActionRenderer
 
@@ -84,8 +84,14 @@ class GetCell(MazeAction):
 @dataclass(repr=False)
 class AddToPath(MazeAction):
     loc: tuple[int, int]
-
+    path: list[tuple[int, int]] = field(repr=False, init=False)
     TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.ADDTOPATH
+
+    def run(self, maze):
+        self.path.append(self.loc)
+
+    def reverse(self, maze):
+        self.path.pop()
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -94,8 +100,12 @@ class AddToPath(MazeAction):
 @dataclass(repr=False)
 class RemoveFromPath(MazeAction):
     i: int
-
+    path: list[tuple[int, int]] = field(repr=False, init=False)
     TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.REMOVEFROMPATH
+
+    # TODO: Make the [RemoveFromPath] class store what it removes so that it can reverse the action
+    def run(self, maze):
+        self.path.pop(self.i)
 
 
 class GetCellRenderer(ActionRenderer):

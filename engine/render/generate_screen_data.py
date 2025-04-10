@@ -50,8 +50,8 @@ def generateScreenData(screen: pg.Surface, maze: MazeState):
         (screen.get_width() - 2 * SCREEN_BORDER_PADDING) / cellWidth,
     )
     centerOffset = (
-        screen.get_width() - cellWidth * dx - SCREEN_BORDER_PADDING,
-        screen.get_height() - cellHeight * dx - SCREEN_BORDER_PADDING,
+        (screen.get_width() - cellWidth * dx - SCREEN_BORDER_PADDING) / 2,
+        (screen.get_height() - cellHeight * dx - SCREEN_BORDER_PADDING) / 2,
     )
     cellPoints = _generateCellPoints(centerOffset, cellWidth, cellHeight, dx)
     return ScreenData(

@@ -90,3 +90,57 @@ class Tremaux(Algorithm):
                 pos = self.path.path[-1]
 
             self.maze.logger.endStep(self.maze)
+
+
+class BreadthFirst(Algorithm):
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+    def __init__(self, _maze) -> None:
+        self.maze: MazeState = _maze
+        self.path: Path = Path(_maze)
+
+    def run(self) -> None:
+        self.maze.logger.newPhase("BreadthFirst")
+
+        # Define starting and ending positions. Assume the maze is indexed such that
+        # (1,1) is the start and (maze.width * 2 - 1, maze.height * 2 - 1) is the exit.
+        start = (1, 1)
+        end = (self.maze.width * 2 - 1, self.maze.height * 2 - 1)
+
+        # Initialize the queue for the BFS and mark the start as visited.
+        queue = [start]
+        visited = {start: True}
+        # Predecessor dictionary to reconstruct the path later.
+        predecessor = {start: None}
+
+        found = False
+        # Process the queue until it's empty or the end is found.
+        while queue and not found:
+            current = queue.pop(0)
+            if current == end:
+                found = True
+                break
+
+            # Explore all neighboring positions.
+            for d in BreadthFirst.directions:
+                new_pos = (current[0] + d[0], current[1] + d[1])
+                # Check if the new position is within maze bounds and is accessible.
+                if self.maze[new_pos] == 0 and new_pos not in visited:
+                    visited[new_pos] = True
+                    predecessor[new_pos] = current
+                    queue.append(new_pos)
+
+            # Log the state after each step.
+            self.maze.logger.endStep(self.maze)
+
+        # Reconstruct the path from end to start using the predecessor links.
+        solution_path = []
+        node = end
+        while node is not None:
+            solution_path.append(node)
+            node = predecessor[node]
+        solution_path.reverse()
+
+        # Add each node of the solution to the path.
+        for pos in solution_path:
+            self.path.add(pos)
