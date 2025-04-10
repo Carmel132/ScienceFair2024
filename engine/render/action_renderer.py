@@ -1,0 +1,6 @@
+from engine.render.screen_data import ScreenData
+
+
+class ActionRenderer:
+    def start(self, _screenData: ScreenData) -> None: ...
+    def frame(self) -> None: ...
