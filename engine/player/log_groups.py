@@ -35,7 +35,7 @@ def _phasesToSteps(
                 continue
             newPhase[1][-1].append(action)
 
-        ret.append(newPhase)
+        ret.append((newPhase[0], [p for p in newPhase[1] if len(p) > 1]))
     return ret
 
 

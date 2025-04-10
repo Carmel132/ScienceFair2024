@@ -18,7 +18,7 @@ RightHandRule(m).run()
 
 print(s.log)
 
-from engine.render.screen_data import ScreenData
+from engine.render.generate_screen_data import generateScreenData
 from maze.state import MazeState
 from engine.render.maze_renderer import MazeRenderer
 import pygame as pg
@@ -32,9 +32,13 @@ class Game:
     def run(self) -> None:
         pg.init()
         screen = pg.display.set_mode((800, 800))
+
         maze = MazeState(6, 5)
-        rend = MazeRenderer(ScreenData.generateScreenData(screen, maze), maze)
+        screenData = generateScreenData(screen, maze)
+        rend = MazeRenderer(screenData, maze)
         act = generatePhasePlayer(maze, m.logger.log)
+
+        act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
         while True:
             # Events
             for event in pg.event.get():
@@ -44,7 +48,12 @@ class Game:
                     return
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_RIGHT:
+                        act.getCurrent().getCurrent().end()
                         act.next()
+                        act.getCurrent().getCurrent().getCurrent().getRenderer().start(
+                            screenData
+                        )
+                        print(act.getCurrent().getCurrent().actions)
                     if event.key == pg.K_LEFT:
                         act.prev()
 
@@ -52,6 +61,7 @@ class Game:
             pg.display.flip()
             screen.fill((0, 0, 0))
             rend.render()
+            act.getCurrent().getCurrent().getCurrent().getRenderer().frame()
             pg.display.update()
 
 

@@ -1,7 +1,7 @@
 from maze.logger import LoggerGroup
 from random import seed, shuffle
 
-AXIAL_DIRECTIONS = [(1, 0), (0, -1), (-1, 0), (0, 1)]  # Right, down, left, up
+AXIAL_DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # Right, down, left, up
 
 
 # Holds maze data
@@ -98,3 +98,7 @@ class Path:
     def add(self, pos: tuple[int, int]) -> None:
         self.path.append(pos)
         self.maze.logger.addToPath(self.maze, pos)
+
+    def remove(self, i=-1) -> None:
+        self.path.pop(i)
+        self.maze.logger.removeFromPath(self.maze, i)

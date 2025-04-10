@@ -13,6 +13,8 @@ class ActionPlayer:
     def end(self) -> None: ...
     # returns whether the player is ready to end and allow the playing of the following player
     def isAtEnd(self) -> bool: ...
+    # returns element at the current index
+    def getCurrent(self) -> object: ...
 
 
 class MazeActionPlayer(ActionPlayer):
@@ -38,11 +40,16 @@ class MazeActionPlayer(ActionPlayer):
             self.prev()
 
     def end(self) -> None:
-        while self.idx < len(self.actions):
+        while self.idx < len(self.actions) - 1:
             self.next()
 
     def isAtEnd(self) -> bool:
         return self.idx >= len(self.actions)
+
+    def getCurrent(self):
+        if self.idx >= len(self.actions):
+            return self.actions[-1]
+        return self.actions[self.idx]
 
 
 class ActionPlayerGroup(ActionPlayer):
@@ -53,9 +60,12 @@ class ActionPlayerGroup(ActionPlayer):
     def next(self) -> None:
         if self.actionPlayers[self.idx].isAtEnd():
             self.idx += 1
-            return
 
         self.actionPlayers[self.idx].next()
+
+        if self.actionPlayers[self.idx].isAtEnd():
+            self.idx += 1
+            return
 
     def prev(self) -> None:
         if self.idx <= 0:
@@ -68,7 +78,7 @@ class ActionPlayerGroup(ActionPlayer):
             self.prev()
 
     def end(self) -> None:
-        while self.idx < len(self.actionPlayers):
+        while self.idx < len(self.actionPlayers) - 1:
             self.next()
 
     def isAtEnd(self) -> bool:

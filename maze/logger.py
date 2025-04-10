@@ -1,101 +1,12 @@
-from dataclasses import dataclass
-from enum import Enum
-
-
-# Defines basic operation on MazeState
-class MazeAction:
-    def run(self, maze): ...
-    def reverse(self, maze): ...
-
-    def getRenderer(self): ...
-
-    class ActionTypes(Enum):
-        SETCELL = 1
-        STEPDIVIDER = 2
-        GETCELL = 3
-        ADDTOPATH = 4
-        PHASEDIVIDER = 5
-
-        def __repr__(self) -> str:
-            return self.name
-
-    TYPE: ActionTypes
-
-    def __repr__(self) -> str:
-        return ", ".join(f"{key}={repr(item)}" for (key, item) in self.__dict__.items())
-
-
-def _MazeActionClass(cls):
-    originalRepr = cls.__repr__ if hasattr(cls, "__repr__") else None
-
-    class Wrapped(cls):
-        def __repr__(self) -> str:
-            return (
-                super().__repr__() if originalRepr else super(Wrapped, self).__repr__()
-            )
-
-    return Wrapped
-
-
-# Action for modifying cell value
-@_MazeActionClass
-@dataclass
-class SetCell(MazeAction):
-    loc: tuple[int, int]
-    old: int
-    new: int
-
-    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.SETCELL
-
-    def run(self, maze):
-        maze.cells[self.loc[1]][self.loc[0]] = self.new
-
-    def reverse(self, maze):
-        maze.cells[self.loc[1]][self.loc[0]] = self.old
-
-    def __repr__(self) -> str:
-        return super().__repr__()
-
-
-@_MazeActionClass
-class StepDivider(MazeAction):
-    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.STEPDIVIDER
-
-    def __repr__(self) -> str:
-        return "---"
-
-
-@_MazeActionClass
-@dataclass
-class PhaseDivider(MazeAction):
-    name: str
-    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.PHASEDIVIDER
-
-    def __repr__(self) -> str:
-        return ">>> " + self.name
-
-
-@_MazeActionClass
-@dataclass
-class GetCell(MazeAction):
-    loc: tuple[int, int]
-    val: int
-
-    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.GETCELL
-
-    def __repr__(self) -> str:
-        return super().__repr__()
-
-
-@_MazeActionClass
-@dataclass
-class AddToPath(MazeAction):
-    loc: tuple[int, int]
-
-    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.ADDTOPATH
-
-    def __repr__(self) -> str:
-        return super().__repr__()
+from maze.actions import (
+    MazeAction,
+    GetCell,
+    RemoveFromPath,
+    SetCell,
+    StepDivider,
+    AddToPath,
+    PhaseDivider,
+)
 
 
 # Basic logger interface
@@ -104,6 +15,7 @@ class Logger:
     def getCell(self, maze, loc: tuple[int, int], val: int): ...
     def endStep(self, maze): ...
     def addToPath(self, maze, loc: tuple[int, int]): ...
+    def removeFromPath(self, maze, i: int): ...
     def newPhase(self, name: str): ...
 
 
@@ -133,6 +45,9 @@ class PathLogger(Logger):
 
     def addToPath(self, maze, loc: tuple[int, int]):
         self.log.append(AddToPath(loc))
+
+    def removeFromPath(self, maze, i: int = -1):
+        self.log.append(RemoveFromPath(i))
 
 
 class PhaseLogger(Logger):
@@ -166,6 +81,10 @@ class LoggerGroup(Logger):
     def addToPath(self, maze, loc: tuple[int, int]) -> None:
         for log in self.logs:
             log.addToPath(maze, loc)
+
+    def removeFromPath(self, maze, i: int) -> None:
+        for log in self.logs:
+            log.removeFromPath(maze, i)
 
     def newPhase(self, name: str) -> None:
         for log in self.logs:
