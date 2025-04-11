@@ -5,24 +5,25 @@ from maze.logger import (
     PathLogger,
     MazeAction,
     PhaseLogger,
-    StateLogger
+    StateLogger,
 )
 from sys import setrecursionlimit
 
 setrecursionlimit(10**6)
 from maze.state import MazeState, MazeGeneratorFactory
 from maze.algorithms import (
-    RightHandRule, 
+    RightHandRule,
     Tremaux,
-    BreadthFirst, 
-    DepthFirst, 
-    AStar, 
-    Dijkstra, 
-    RecursiveBacktracking, 
-    GreedyBestFirstSearch, 
+    BreadthFirst,
+    DepthFirst,
+    AStar,
+    Dijkstra,
+    RecursiveBacktracking,
+    GreedyBestFirstSearch,
     GaussianWalkers,
-    QLearning
+    QLearning,
 )
+
 path: list[tuple[int, int]] = []
 s = LoggerGroup(PhaseLogger(), StateLogger(), PathLogger(path), StepLogger())
 
@@ -45,13 +46,14 @@ import pygame as pg
 from engine.player.log_groups import generatePhasePlayer
 from engine.render.path_renderer import PathRenderer
 
+
 class Game:
     def __init__(self):
         pass
 
     def run(self) -> None:
         pg.init()
-        screen = pg.display.set_mode((800,800))
+        screen = pg.display.set_mode((800, 800))
         pg.display.set_caption("Maze")
 
         maze = MazeState(sz[0], sz[1])
@@ -60,20 +62,21 @@ class Game:
         pathRend = PathRenderer(screenData, path)
         act = generatePhasePlayer(maze, m.logger.log)
 
-        act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
+        # act.getCurrent().getCurrent().getRenderer().start(screenData)
 
         def onUp():
-            act.getCurrent().end()
+            ...
+            # act.getCurrent().end()
 
-            act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
+            # act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
 
         def onRight():
-            act.getCurrent().getCurrent().end()
+            # act.getCurrent().getCurrent().end()
             act.next()
-            act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
-
+            # act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
 
             # Events
+
         while True:
             # Events
             for event in pg.event.get():
@@ -83,7 +86,8 @@ class Game:
                     return
                 if event.type == pg.KEYDOWN:
                     if event.key == pg.K_RIGHT:
-                        onRight()
+                        # onRight()
+                        act.next()
                         # print(path)
                     if event.key == pg.K_LEFT:
                         act.prev()
@@ -95,7 +99,7 @@ class Game:
             screen.fill((0, 0, 0))
             rend.render()
             pathRend.render()
-            act.getCurrent().getCurrent().getCurrent().getRenderer().frame()
+            act.getCurrent().getCurrent().getRenderer().frame()
             pg.display.update()
 
 

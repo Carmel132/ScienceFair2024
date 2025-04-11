@@ -31,6 +31,19 @@ class MazeAction:
         return ", ".join(f"{key}={repr(item)}" for (key, item) in self.__dict__.items())
 
 
+class MazeActionGroup(MazeAction):
+    def __init__(self, _actions: list[MazeAction]):
+        self.actions = _actions
+
+    def run(self, maze):
+        for action in self.actions:
+            action.run(maze)
+
+    def reverse(self, maze):
+        for action in self.actions[::-1]:
+            action.reverse(maze)
+
+
 # Action for modifying cell value
 @dataclass(repr=False)
 class SetCell(MazeAction):
@@ -107,26 +120,32 @@ class RemoveFromPath(MazeAction):
     # TODO: Make the [RemoveFromPath] class store what it removes so that it can reverse the action
     def run(self, maze):
         self.storeRemoved = self.path.pop(self.i)
+
     def reverse(self, maze):
         try:
             self.path.append(self.i, self.storeRemoved)
         except AttributeError:
             print("Tried to undo remove when nothing to undo")
 
+
 @dataclass(repr=False)
 class ClearPath(MazeAction):
     path: list[tuple[int, int]] = field(repr=False, init=False)
     TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.CLEARPATH
+
     def run(self, maze):
         print(2)
         from copy import deepcopy
+
         self.storePath = deepcopy(self.path)
         self.path.clear()
+
     def reverse(self, maze):
         try:
             self.path.extend(self.storePath)
         except AttributeError:
             pass
+
 
 class GetCellRenderer(ActionRenderer):
     def __init__(self, _action: GetCell):
