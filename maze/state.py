@@ -102,3 +102,6 @@ class Path:
     def remove(self, i=-1) -> None:
         self.path.pop(i)
         self.maze.logger.removeFromPath(self.maze, i)
+    def clear(self):
+        self.path.clear()
+        self.maze.logger.clearPath(self.maze)

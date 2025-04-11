@@ -20,6 +20,7 @@ class MazeAction:
         ADDTOPATH = 4
         PHASEDIVIDER = 5
         REMOVEFROMPATH = 6
+        CLEARPATH = 7
 
         def __repr__(self) -> str:
             return self.name
@@ -105,8 +106,27 @@ class RemoveFromPath(MazeAction):
 
     # TODO: Make the [RemoveFromPath] class store what it removes so that it can reverse the action
     def run(self, maze):
-        self.path.pop(self.i)
+        self.storeRemoved = self.path.pop(self.i)
+    def reverse(self, maze):
+        try:
+            self.path.append(self.i, self.storeRemoved)
+        except AttributeError:
+            print("Tried to undo remove when nothing to undo")
 
+@dataclass(repr=False)
+class ClearPath(MazeAction):
+    path: list[tuple[int, int]] = field(repr=False, init=False)
+    TYPE: MazeAction.ActionTypes = MazeAction.ActionTypes.CLEARPATH
+    def run(self, maze):
+        print(2)
+        from copy import deepcopy
+        self.storePath = deepcopy(self.path)
+        self.path.clear()
+    def reverse(self, maze):
+        try:
+            self.path.extend(self.storePath)
+        except AttributeError:
+            pass
 
 class GetCellRenderer(ActionRenderer):
     def __init__(self, _action: GetCell):

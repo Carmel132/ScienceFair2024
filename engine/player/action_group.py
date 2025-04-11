@@ -58,6 +58,7 @@ class ActionPlayerGroup(ActionPlayer):
         self.idx = 0
 
     def next(self) -> None:
+        if self.idx >= len(self.actionPlayers): return
         if self.actionPlayers[self.idx].isAtEnd():
             self.idx += 1
 
@@ -85,4 +86,6 @@ class ActionPlayerGroup(ActionPlayer):
         return self.idx >= len(self.actionPlayers)
 
     def getCurrent(self) -> ActionPlayer:
+        if (self.idx >= len(self.actionPlayers)):
+            return self.actionPlayers[-1]
         return self.actionPlayers[self.idx]

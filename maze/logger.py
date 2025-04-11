@@ -6,6 +6,7 @@ from maze.actions import (
     StepDivider,
     AddToPath,
     PhaseDivider,
+    ClearPath
 )
 
 
@@ -17,6 +18,7 @@ class Logger:
     def addToPath(self, maze, loc: tuple[int, int]): ...
     def removeFromPath(self, maze, i: int): ...
     def newPhase(self, name: str): ...
+    def clearPath(self, maze): ...
 
 
 # Logger that tracks the state of the Maze
@@ -51,6 +53,12 @@ class PathLogger(Logger):
 
     def removeFromPath(self, maze, i: int = -1):
         a = RemoveFromPath(i)
+        a.path = self.path
+        self.log.append(a)
+    def clearPath(self, maze):
+        print(1)
+        # self.path.clear()
+        a = ClearPath()
         a.path = self.path
         self.log.append(a)
 
@@ -94,3 +102,6 @@ class LoggerGroup(Logger):
     def newPhase(self, name: str) -> None:
         for log in self.logs:
             log.newPhase(name)
+    def clearPath(self, maze):
+        for log in self.logs:
+            log.clearPath(maze)
