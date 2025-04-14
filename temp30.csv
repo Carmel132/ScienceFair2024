@@ -1,0 +1,9 @@
+MazeSize,Solver,Average_Time,Average_Memory
+30x30,RightHandRule,0.010382,28158
+30x30,Tremaux,0.144153,2691534
+30x30,BreadthFirst,0.009510,103920
+30x30,DepthFirst,0.031337,1437048
+30x30,AStar,0.017765,96419
+30x30,Dijkstra,0.028384,95919
+30x30,RecursiveBacktracking,0.082630,2933913
+30x30,GreedyBestFirstSearch,0.018112,92383

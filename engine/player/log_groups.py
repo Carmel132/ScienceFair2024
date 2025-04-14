@@ -1,4 +1,5 @@
 from engine.player.action_group import ActionPlayer, MazeActionPlayer, ActionPlayerGroup
+from maze.actions import MazeActionGroup
 from maze.logger import MazeAction, PhaseDivider
 from maze.state import MazeState
 # Each step will be combined into an [MazeActionGroup]. This array will be divided by phases,
@@ -6,10 +7,12 @@ from maze.state import MazeState
 # a [MazeActionPlayer]. Lastly, the phases will be combined into one [ActionPlayerGroup]
 
 
-class PhasePlayer(ActionPlayerGroup):
-    def __init__(self, _phase: PhaseDivider, _actions: ActionPlayerGroup):
+class PhasePlayer(MazeActionPlayer):
+    def __init__(
+        self, _maze: MazeState, _phase: PhaseDivider, *_actions: MazeActionGroup
+    ):
         self.phase = _phase
-        super().__init__(*_actions.actionPlayers)
+        super().__init__(_maze, *_actions)
 
 
 def _logToPhases(log: list[MazeAction]) -> list[tuple[PhaseDivider, list[MazeAction]]]:
@@ -42,17 +45,14 @@ def _phasesToSteps(
 def _stepsToPlayer(
     maze: MazeState, steps: list[tuple[PhaseDivider, list[list[MazeAction]]]]
 ) -> ActionPlayerGroup:
-    phasePlayers: list[PhasePlayer] = []
-    for phase in steps:
-        phasePlayers.append(
-            PhasePlayer(
-                phase[0],
-                ActionPlayerGroup(
-                    *map(lambda actions: MazeActionPlayer(maze, *actions), phase[1])
-                ),
-            )
+    return ActionPlayerGroup(
+        *map(
+            lambda step: PhasePlayer(
+                maze, step[0], *map(lambda s: MazeActionGroup(s), step[1])
+            ),
+            steps,
         )
-    return ActionPlayerGroup(*phasePlayers)
+    )
 
 
 def generatePhasePlayer(maze: MazeState, log: list[MazeAction]) -> ActionPlayerGroup:
