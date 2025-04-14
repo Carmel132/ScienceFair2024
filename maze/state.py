@@ -58,6 +58,7 @@ class MazeGeneratorFactory:
         )
 
     def generate(self) -> MazeState:
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         self.m.logger.newPhase("GenerateMaze")
         visited = [
             [0 for j in range(1 + 2 * self.m.width)]
@@ -69,8 +70,8 @@ class MazeGeneratorFactory:
 
         while len(stack) != 0:
             currentCell = stack.pop()
-            shuffle(AXIAL_DIRECTIONS)
-            for direction in AXIAL_DIRECTIONS:
+            shuffle(directions)
+            for direction in directions:
                 n = (currentCell[0] + direction[0], currentCell[1] + direction[1])
                 if MazeGeneratorFactory.isValidMove(
                     n, self.m.width, self.m.height, visited

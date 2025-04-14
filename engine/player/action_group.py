@@ -71,8 +71,8 @@ class ActionPlayerGroup(ActionPlayer):
     def prev(self) -> None:
         if self.idx <= 0:
             return
-        self.idx -= 1
         self.actionPlayers[self.idx].prev()
+        self.idx -= 1
 
     def start(self) -> None:
         while self.idx > 0:

@@ -31,13 +31,15 @@ sz = (50, 50)
 
 m = MazeState(sz[0], sz[1], _logger=s)
 MazeGeneratorFactory(m, 2).generate()
-Tremaux(m).run()
-s.clearPath(m)
-s.endStep(m)
 RightHandRule(m).run()
-
-s.clearPath(m)
+Tremaux(m).run()
+BreadthFirst(m).run()
+DepthFirst(m).run()
 AStar(m).run()
+Dijkstra(m).run()
+RecursiveBacktracking(m).run()
+GreedyBestFirstSearch(m).run()
+
 # print(s.log)
 from engine.render.generate_screen_data import generateScreenData
 from maze.state import MazeState
@@ -53,7 +55,7 @@ class Game:
 
     def run(self) -> None:
         pg.init()
-        screen = pg.display.set_mode((800, 800))
+        screen = pg.display.set_mode((800, 800), pg.FULLSCREEN)
         pg.display.set_caption("Maze")
 
         maze = MazeState(sz[0], sz[1])
@@ -65,7 +67,8 @@ class Game:
         # act.getCurrent().getCurrent().getRenderer().start(screenData)
 
         def onUp():
-            ...
+            act.getCurrent().end()
+            pathRend.path.clear()
             # act.getCurrent().end()
 
             # act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
@@ -74,7 +77,9 @@ class Game:
             # act.getCurrent().getCurrent().end()
             act.next()
             # act.getCurrent().getCurrent().getCurrent().getRenderer().start(screenData)
-
+        def restart():
+            act.start()
+            onUp()
             # Events
 
         while True:
